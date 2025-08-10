@@ -76,6 +76,31 @@ main {
     margin-bottom: 1rem;
 }
 
+.equipment-list {
+    margin-top: 2rem;
+    padding: 0 1rem;
+}
+
+.equipment-list h2 {
+    font-size: 1.8rem;
+    color: #bb86fc;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.5rem;
+    margin-top: 2rem;
+}
+
+.equipment-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.equipment-list li {
+    background-color: #1f1f1f;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+}
+
 /* Footer */
 footer {
     background-color: #1f1f1f;
