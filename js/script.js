@@ -23,4 +23,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load the stored language or default to English
     const storedLang = localStorage.getItem('language') || 'en';
     setLanguage(storedLang);
+
+    const loadSolarData = async () => {
+        try {
+            const [sfiRes, kIndexRes, aIndexRes] = await Promise.all([
+                fetch('https://services.swpc.noaa.gov/json/f107_cm_flux.json'),
+                fetch('https://services.swpc.noaa.gov/json/planetary_k_index_1m.json'),
+                fetch('https://services.swpc.noaa.gov/json/predicted_fredericksburg_a_index.json')
+            ]);
+
+            const sfiData = await sfiRes.json();
+            const kIndexData = await kIndexRes.json();
+            const aIndexData = await aIndexRes.json();
+
+            // Get the latest values
+            const sfi = sfiData[0].flux;
+            const kIndex = kIndexData[0].kp_index;
+            const aIndex = aIndexData[0].afred_1_day;
+
+            document.getElementById('sfi-value').textContent = sfi;
+            document.getElementById('k-index-value').textContent = kIndex;
+            document.getElementById('a-index-value').textContent = aIndex;
+
+        } catch (error) {
+            console.error('Error loading solar data:', error);
+        }
+    };
+
+    loadSolarData();
 });
