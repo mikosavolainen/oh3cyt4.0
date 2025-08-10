@@ -1,0 +1,17 @@
+{
+    "home": "Koti",
+    "equipment": "Laitteisto",
+    "welcome_title": "Tervetuloa verkkosivustolleni",
+    "welcome_message": "Tämä on OH3CYT:n, suomalaisen radioamatöörin, henkilökohtainen verkkosivusto.",
+    "github": "Github",
+    "qrz": "QRZ",
+    "websdr": "WebSDR",
+    "equipment_title": "Laitteistoni",
+    "equipment_text": "Tämä sivu sisältää tietoa radioamatöörilaitteistostani.",
+    "maintenance_title": "Huollossa",
+    "maintenance_text": "Verkkosivusto on tällä hetkellä suunnitellussa huollossa. Yritä myöhemmin uudelleen.",
+    "not_found_title": "404 - Sivua ei löytynyt",
+    "not_found_text": "Etsimääsi sivua ei ole olemassa. Palaa etusivulle.",
+    "short_maintenance_title": "Lyhyt huoltokatko",
+    "short_maintenance_text": "Teemme parhaillaan lyhyttä huoltokatkoa. Palaamme pian."
+}
