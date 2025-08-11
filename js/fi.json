@@ -38,5 +38,19 @@
     "solarStorm": {
         "alert": "<strong>HÄLYTYS:</strong> Geomagneettinen myrsky käynnissä!"
     },
-    "latest_qsos_title": "Viimeisimmät QSO:t"
+    "latest_qsos_title": "Viimeisimmät QSO:t",
+    "logbook": "Lokikirja",
+    "logbook_title": "Kilpailuloki",
+    "log.date": "Päivämäärä",
+    "log.time": "Aika (UTC)",
+    "log.call": "Kutsu",
+    "log.band": "Bandi",
+    "log.mode": "Modi",
+    "log.rst_sent": "RST Lähetetty",
+    "log.rst_rcvd": "RST Vastaanotettu",
+    "log.exch_sent": "Exch Lähetetty",
+    "log.exch_rcvd": "Exch Vastaanotettu",
+    "log.add_qso": "Lisää QSO",
+    "log.logged_qsos": "Kirjatut QSO:t",
+    "log.export_adif": "Vie ADIF-muotoon"
 }
