@@ -52,5 +52,8 @@
     "log.exch_rcvd": "Exch Vastaanotettu",
     "log.add_qso": "Lisää QSO",
     "log.logged_qsos": "Kirjatut QSO:t",
-    "log.export_adif": "Vie ADIF-muotoon"
+    "log.export_adif": "Vie ADIF-muotoon",
+    "log.contest": "Kilpailu",
+    "contest.generic_serial": "Yleinen (Sarjanumero)",
+    "contest.generic_static": "Yleinen (Kiinteä Exch)"
 }

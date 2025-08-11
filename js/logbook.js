@@ -1,6 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
     const logbookForm = document.getElementById('logbook-form');
     const logbookTableBody = document.querySelector('#logbook-table tbody');
+    const exportAdifBtn = document.getElementById('export-adif');
+    const contestSelector = document.getElementById('contest');
+    const exchSentInput = document.getElementById('exch-sent');
+
+    const contests = {
+        'generic-serial': { type: 'serial' },
+        'generic-static': { type: 'static' }
+    };
+
+    let currentContest = contests[contestSelector.value];
 
     const getQsos = () => {
         return JSON.parse(localStorage.getItem('qsos')) || [];
@@ -8,6 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const saveQsos = (qsos) => {
         localStorage.setItem('qsos', JSON.stringify(qsos));
+    };
+
+    const getSerialNumber = () => {
+        return parseInt(localStorage.getItem('serialNumber') || '1', 10);
+    };
+
+    const saveSerialNumber = (number) => {
+        localStorage.setItem('serialNumber', String(number));
     };
 
     const renderQsos = () => {
@@ -31,6 +49,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    const setDateTime = () => {
+        const now = new Date();
+        const year = now.getUTCFullYear();
+        const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(now.getUTCDate()).padStart(2, '0');
+        const hours = String(now.getUTCHours()).padStart(2, '0');
+        const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+
+        document.getElementById('date').value = `${year}-${month}-${day}`;
+        document.getElementById('time').value = `${hours}:${minutes}`;
+    };
+
+    const updateExchangeSentField = () => {
+        if (currentContest.type === 'serial') {
+            const serial = getSerialNumber();
+            exchSentInput.value = String(serial).padStart(3, '0');
+            exchSentInput.readOnly = true;
+        } else {
+            exchSentInput.value = '';
+            exchSentInput.readOnly = false;
+        }
+    };
+
     logbookForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const newQso = {
@@ -48,8 +89,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const qsos = getQsos();
         qsos.push(newQso);
         saveQsos(qsos);
+
+        if (currentContest.type === 'serial') {
+            const currentSerial = getSerialNumber();
+            saveSerialNumber(currentSerial + 1);
+        }
+
         renderQsos();
         logbookForm.reset();
+        setDateTime();
+        updateExchangeSentField();
     });
 
     logbookTableBody.addEventListener('click', (e) => {
@@ -59,10 +108,14 @@ document.addEventListener('DOMContentLoaded', () => {
             qsos.splice(index, 1);
             saveQsos(qsos);
             renderQsos();
+            // Note: Serial number does not decrement on delete, which is correct for contest logs.
         }
     });
 
-    const exportAdifBtn = document.getElementById('export-adif');
+    contestSelector.addEventListener('change', (e) => {
+        currentContest = contests[e.target.value];
+        updateExchangeSentField();
+    });
 
     const toAdif = (qsos) => {
         let adif = `ADIF Export from OH3CYT Web Logbook\n<EOH>\n\n`;
@@ -99,6 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
         URL.revokeObjectURL(url);
     });
 
-    // Initial render
+    // Initial render and setup
     renderQsos();
+    setDateTime();
+    updateExchangeSentField();
 });

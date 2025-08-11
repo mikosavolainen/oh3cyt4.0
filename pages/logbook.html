@@ -31,6 +31,13 @@
 
         <section class="logbook-form-section">
             <form id="logbook-form">
+                <div class="form-group contest-selector">
+                    <label for="contest" data-lang="log.contest">Contest</label>
+                    <select id="contest">
+                        <option value="generic-serial" data-lang="contest.generic_serial">Generic (Serial #)</option>
+                        <option value="generic-static" data-lang="contest.generic_static">Generic (Static Exch)</option>
+                    </select>
+                </div>
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="date" data-lang="log.date">Date</label>
@@ -50,7 +57,15 @@
                     </div>
                     <div class="form-group">
                         <label for="mode" data-lang="log.mode">Mode</label>
-                        <input type="text" id="mode" required>
+                        <select id="mode" required>
+                            <option value="SSB">SSB</option>
+                            <option value="CW">CW</option>
+                            <option value="FM">FM</option>
+                            <option value="RTTY">RTTY</option>
+                            <option value="FT8">FT8</option>
+                            <option value="FT4">FT4</option>
+                            <option value="PSK31">PSK31</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="rst-sent" data-lang="log.rst_sent">RST Sent</label>
