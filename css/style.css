@@ -219,3 +219,88 @@ footer {
         display: none;
     }
 }
+
+/* Logbook Form */
+.logbook-form-section {
+    margin-top: 2rem;
+    padding: 2rem;
+    background-color: #1f1f1f;
+    border-radius: 8px;
+}
+
+#logbook-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+#logbook-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+#logbook-form label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #bb86fc;
+}
+
+#logbook-form input {
+    padding: 0.8rem;
+    background-color: #121212;
+    border: 1px solid #333;
+    color: #e0e0e0;
+    border-radius: 5px;
+}
+
+#logbook-form button {
+    padding: 0.8rem 1.5rem;
+    background-color: #bb86fc;
+    color: #121212;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* Logbook Table */
+.logbook-table-section {
+    margin-top: 2rem;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+#logbook-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+#logbook-table th, #logbook-table td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+#logbook-table th {
+    background-color: #1f1f1f;
+}
+
+#logbook-table tbody tr:hover {
+    background-color: #2a2a2a;
+}
+
+#export-adif {
+    margin-top: 1rem;
+    padding: 0.8rem 1.5rem;
+    background-color: #03dac6;
+    color: #121212;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}

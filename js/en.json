@@ -38,5 +38,19 @@
     "solarStorm": {
         "alert": "<strong>ALERT:</strong> Geomagnetic Storm in Progress!"
     },
-    "latest_qsos_title": "Latest QSOs"
+    "latest_qsos_title": "Latest QSOs",
+    "logbook": "Logbook",
+    "logbook_title": "Contest Logbook",
+    "log.date": "Date",
+    "log.time": "Time (UTC)",
+    "log.call": "Call",
+    "log.band": "Band",
+    "log.mode": "Mode",
+    "log.rst_sent": "RST Sent",
+    "log.rst_rcvd": "RST Rcvd",
+    "log.exch_sent": "Exch Sent",
+    "log.exch_rcvd": "Exch Rcvd",
+    "log.add_qso": "Add QSO",
+    "log.logged_qsos": "Logged QSOs",
+    "log.export_adif": "Export to ADIF"
 }
