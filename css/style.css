@@ -228,6 +228,10 @@ footer {
     border-radius: 8px;
 }
 
+#logbook-form .contest-selector {
+    margin-bottom: 1.5rem;
+}
+
 #logbook-form .form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

@@ -52,5 +52,8 @@
     "log.exch_rcvd": "Exch Rcvd",
     "log.add_qso": "Add QSO",
     "log.logged_qsos": "Logged QSOs",
-    "log.export_adif": "Export to ADIF"
+    "log.export_adif": "Export to ADIF",
+    "log.contest": "Contest",
+    "contest.generic_serial": "Generic (Serial #)",
+    "contest.generic_static": "Generic (Static Exch)"
 }
