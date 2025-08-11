@@ -31,17 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loadSolarData = async () => {
         try {
-            const [sfiRes, kIndexRes, aIndexRes, alertsRes] = await Promise.all([
+            const [sfiRes, kIndexRes, aIndexRes] = await Promise.all([
                 fetch('https://services.swpc.noaa.gov/json/f107_cm_flux.json'),
                 fetch('https://services.swpc.noaa.gov/json/planetary_k_index_1m.json'),
-                fetch('https://services.swpc.noaa.gov/json/predicted_fredericksburg_a_index.json'),
-                fetch('https://services.swpc.noaa.gov/products/alerts.json')
+                fetch('https://services.swpc.noaa.gov/json/predicted_fredericksburg_a_index.json')
             ]);
 
             const sfiData = await sfiRes.json();
             const kIndexData = await kIndexRes.json();
             const aIndexData = await aIndexRes.json();
-            const alertsData = await alertsRes.json();
 
             // Get the latest values
             const sfi = sfiData.length > 0 ? sfiData[0].flux : '--';
@@ -54,16 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Check for solar storm alerts
             const stormAlertElement = document.getElementById('solar-storm-alert');
-            let stormInProgress = false;
-            for (const alert of alertsData) {
-                if (alert.message && alert.message.includes('WARNING: Geomagnetic K-index')) {
-                    const kIndexMatch = alert.message.match(/K-index of (\d+)/);
-                    if (kIndexMatch && parseInt(kIndexMatch[1], 10) >= 5) {
-                        stormInProgress = true;
-                        break;
-                    }
-                }
-            }
+            const stormInProgress = kIndexData.length > 0 && parseInt(kIndexData[0].kp_index, 10) >= 5;
 
             if (stormInProgress) {
                 stormAlertElement.style.display = 'block';
