@@ -26,10 +26,17 @@
     "other_1": "RTL-SDR v3",
     "other_2": "RTL-SDR v4",
     "solar_data_title": "Live Aurinkodata",
+    "sfi_label": "SFI:",
+    "k_index_label": "K-indeksi:",
+    "a_index_label": "A-indeksi:",
     "maintenance_title": "Huollossa",
     "maintenance_text": "Verkkosivusto on tällä hetkellä suunnitellussa huollossa. Yritä myöhemmin uudelleen.",
     "not_found_title": "404 - Sivua ei löytynyt",
     "not_found_text": "Etsimääsi sivua ei ole olemassa. Palaa etusivulle.",
     "short_maintenance_title": "Lyhyt huoltokatko",
-    "short_maintenance_text": "Teemme parhaillaan lyhyttä huoltokatkoa. Palaamme pian."
+    "short_maintenance_text": "Teemme parhaillaan lyhyttä huoltokatkoa. Palaamme pian.",
+    "solarStorm": {
+        "alert": "<strong>HÄLYTYS:</strong> Geomagneettinen myrsky käynnissä!"
+    },
+    "latest_qsos_title": "Viimeisimmät QSO:t"
 }

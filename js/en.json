@@ -26,10 +26,17 @@
     "other_1": "RTL-SDR v3",
     "other_2": "RTL-SDR v4",
     "solar_data_title": "Live Solar Data",
+    "sfi_label": "SFI:",
+    "k_index_label": "K-Index:",
+    "a_index_label": "A-Index:",
     "maintenance_title": "Under Maintenance",
     "maintenance_text": "This website is currently undergoing scheduled maintenance. Please check back later.",
     "not_found_title": "404 - Page Not Found",
     "not_found_text": "The page you are looking for does not exist. Go back to the homepage.",
     "short_maintenance_title": "Short Maintenance",
-    "short_maintenance_text": "We are currently performing a short maintenance. We will be back shortly."
+    "short_maintenance_text": "We are currently performing a short maintenance. We will be back shortly.",
+    "solarStorm": {
+        "alert": "<strong>ALERT:</strong> Geomagnetic Storm in Progress!"
+    },
+    "latest_qsos_title": "Latest QSOs"
 }
