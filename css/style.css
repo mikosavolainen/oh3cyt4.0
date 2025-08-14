@@ -263,12 +263,14 @@ footer {
     color: #bb86fc;
 }
 
-#logbook-form input {
+#logbook-form input, #logbook-form select {
     padding: 0.8rem;
     background-color: #121212;
     border: 1px solid #333;
     color: #e0e0e0;
     border-radius: 5px;
+    font-family: inherit;
+    font-size: 1rem;
 }
 
 #logbook-form button {
