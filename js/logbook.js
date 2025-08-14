@@ -7,7 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const contests = {
         'generic-serial': { type: 'serial' },
-        'generic-static': { type: 'static' }
+        'sac': { type: 'serial' },
+        'cq-wpx': { type: 'serial' },
+        'cq-ww-dx': { type: 'static', placeholder: 'Your CQ Zone' },
+        'iaru-hf': { type: 'static', placeholder: 'Your ITU Zone' },
+        'peruskisa': { type: 'static', placeholder: 'Your Municipality Code' },
+        'generic-static': { type: 'static', placeholder: 'Exchange' }
     };
 
     let currentContest = contests[contestSelector.value];
@@ -66,9 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const serial = getSerialNumber();
             exchSentInput.value = String(serial).padStart(3, '0');
             exchSentInput.readOnly = true;
+            exchSentInput.placeholder = '';
         } else {
-            exchSentInput.value = '';
+            exchSentInput.value = localStorage.getItem('staticExchange') || '';
             exchSentInput.readOnly = false;
+            exchSentInput.placeholder = currentContest.placeholder || 'Exchange';
         }
     };
 
@@ -114,7 +121,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     contestSelector.addEventListener('change', (e) => {
         currentContest = contests[e.target.value];
+        localStorage.setItem('selectedContest', e.target.value);
         updateExchangeSentField();
+    });
+
+    document.getElementById('mode').addEventListener('change', (e) => {
+        localStorage.setItem('selectedMode', e.target.value);
+    });
+
+    exchSentInput.addEventListener('input', (e) => {
+        if (currentContest.type === 'static') {
+            localStorage.setItem('staticExchange', e.target.value);
+        }
     });
 
     const toAdif = (qsos) => {
@@ -152,7 +170,28 @@ document.addEventListener('DOMContentLoaded', () => {
         URL.revokeObjectURL(url);
     });
 
+    const loadFormState = () => {
+        const selectedContest = localStorage.getItem('selectedContest');
+        if (selectedContest) {
+            contestSelector.value = selectedContest;
+            currentContest = contests[selectedContest];
+        }
+
+        const selectedMode = localStorage.getItem('selectedMode');
+        if (selectedMode) {
+            document.getElementById('mode').value = selectedMode;
+        }
+
+        if (currentContest.type === 'static') {
+            const staticExchange = localStorage.getItem('staticExchange');
+            if (staticExchange) {
+                exchSentInput.value = staticExchange;
+            }
+        }
+    };
+
     // Initial render and setup
+    loadFormState();
     renderQsos();
     setDateTime();
     updateExchangeSentField();

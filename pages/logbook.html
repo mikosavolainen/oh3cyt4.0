@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OH3CYT - Contest Logbook</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet"></script>
+    <script src="https://unpkg.com/@joergdietrich/leaflet.terminator"></script>
 </head>
 <body>
     <header>
@@ -29,13 +32,23 @@
             <h1 data-lang="logbook_title">Contest Logbook</h1>
         </section>
 
+        <section class="grayline-map-section">
+            <h2 data-lang="grayline_map_title">Gray Line Map</h2>
+            <div id="grayline-map"></div>
+        </section>
+
         <section class="logbook-form-section">
             <form id="logbook-form">
                 <div class="form-group contest-selector">
                     <label for="contest" data-lang="log.contest">Contest</label>
                     <select id="contest">
                         <option value="generic-serial" data-lang="contest.generic_serial">Generic (Serial #)</option>
-                        <option value="generic-static" data-lang="contest.generic_static">Generic (Static Exch)</option>
+                        <option value="sac" data-lang="contest.sac">SAC Contest</option>
+                        <option value="cq-ww-dx" data-lang="contest.cq_ww_dx">CQ WW DX</option>
+                        <option value="cq-wpx" data-lang="contest.cq_wpx">CQ WPX</option>
+                        <option value="iaru-hf" data-lang="contest.iaru_hf">IARU HF Champ</option>
+                        <option value="peruskisa" data-lang="contest.peruskisa">National HF (Peruskisa)</option>
+                        <option value="generic-static" data-lang="contest.generic_static">Other (Static Exch)</option>
                     </select>
                 </div>
                 <div class="form-grid">
@@ -135,5 +148,6 @@
 
     <script src="../js/script.js"></script>
     <script src="../js/logbook.js"></script>
+    <script src="../js/grayline.js"></script>
 </body>
 </html>
