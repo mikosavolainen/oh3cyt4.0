@@ -7,11 +7,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const contests = {
         'generic-serial': { type: 'serial' },
+        'sral-peruskisa': { type: 'serial' },
+        'sral-talvi': { type: 'serial' },
+        'sral-kalakukko': { type: 'serial' },
+        'sral-sainio': { type: 'serial' },
+        'sral-kesakisa': { type: 'serial' },
+        'sral-syysottelu': { type: 'serial' },
+        'sral-joulu': { type: 'static', exchange: 'HYVÄÄ JOULUA' },
         'sac': { type: 'serial' },
         'cq-wpx': { type: 'serial' },
         'cq-ww-dx': { type: 'static', placeholder: 'Your CQ Zone' },
         'iaru-hf': { type: 'static', placeholder: 'Your ITU Zone' },
-        'peruskisa': { type: 'static', placeholder: 'Your Municipality Code' },
         'generic-static': { type: 'static', placeholder: 'Exchange' }
     };
 
@@ -72,10 +78,15 @@ document.addEventListener('DOMContentLoaded', () => {
             exchSentInput.value = String(serial).padStart(3, '0');
             exchSentInput.readOnly = true;
             exchSentInput.placeholder = '';
-        } else {
-            exchSentInput.value = localStorage.getItem('staticExchange') || '';
-            exchSentInput.readOnly = false;
-            exchSentInput.placeholder = currentContest.placeholder || 'Exchange';
+        } else { // static
+            if (currentContest.exchange) {
+                exchSentInput.value = currentContest.exchange;
+                exchSentInput.readOnly = true;
+            } else {
+                exchSentInput.value = localStorage.getItem('staticExchange') || '';
+                exchSentInput.readOnly = false;
+                exchSentInput.placeholder = currentContest.placeholder || 'Exchange';
+            }
         }
     };
 
