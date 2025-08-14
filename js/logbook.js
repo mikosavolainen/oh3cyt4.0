@@ -103,9 +103,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         renderQsos();
-        logbookForm.reset();
-        setDateTime();
-        updateExchangeSentField();
+
+        // Manually clear only the necessary fields for fast contest logging
+        document.getElementById('call').value = '';
+        document.getElementById('rst-rcvd').value = '59';
+        document.getElementById('exch-rcvd').value = '';
+
+        // Restore selections that might have been cleared by reset() if it were used
+        // This is now handled by not calling reset()
+        const selectedContest = localStorage.getItem('selectedContest');
+        if (selectedContest) contestSelector.value = selectedContest;
+        const selectedMode = localStorage.getItem('selectedMode');
+        if (selectedMode) document.getElementById('mode').value = selectedMode;
+        const selectedBand = localStorage.getItem('selectedBand');
+        if (selectedBand) document.getElementById('band').value = selectedBand;
+
+
+        setDateTime(); // Update date/time for next entry
+        updateExchangeSentField(); // Update serial number for next entry
+        document.getElementById('call').focus(); // Set focus to callsign field for next entry
     });
 
     logbookTableBody.addEventListener('click', (e) => {
@@ -127,6 +143,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('mode').addEventListener('change', (e) => {
         localStorage.setItem('selectedMode', e.target.value);
+    });
+
+    document.getElementById('band').addEventListener('change', (e) => {
+        localStorage.setItem('selectedBand', e.target.value);
     });
 
     exchSentInput.addEventListener('input', (e) => {
@@ -180,6 +200,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedMode = localStorage.getItem('selectedMode');
         if (selectedMode) {
             document.getElementById('mode').value = selectedMode;
+        }
+
+        const selectedBand = localStorage.getItem('selectedBand');
+        if (selectedBand) {
+            document.getElementById('band').value = selectedBand;
         }
 
         if (currentContest.type === 'static') {
