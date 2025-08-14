@@ -55,6 +55,17 @@
     "log.export_adif": "Export to ADIF",
     "log.contest": "Contest",
     "contest.generic_serial": "Generic (Serial #)",
-    "contest.generic_static": "Generic (Static Exch)",
+    "contest.sral_peruskisa": "SRAL Basic Contest",
+    "contest.sral_talvi": "SRAL Winter Contest",
+    "contest.sral_kalakukko": "SRAL Kalakukko Contest",
+    "contest.sral_sainio": "SRAL K.S. Sainio Memorial",
+    "contest.sral_kesakisa": "SRAL Summer Contest",
+    "contest.sral_syysottelu": "SRAL Autumn Contest",
+    "contest.sral_joulu": "SRAL Christmas Contest",
+    "contest.sac": "SAC Contest",
+    "contest.cq_wpx": "CQ WPX",
+    "contest.cq_ww_dx": "CQ WW DX",
+    "contest.iaru_hf": "IARU HF Champ",
+    "contest.generic_static": "Other (Static Exch)",
     "grayline_map_title": "Gray Line Map"
 }
