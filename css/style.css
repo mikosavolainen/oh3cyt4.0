@@ -239,10 +239,17 @@ footer {
     border-radius: 8px;
 }
 
-#logbook-form .contest-selector {
+#logbook-form .contest-config {
+    display: flex;
+    gap: 1rem;
     margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+#logbook-form .contest-selector, #logbook-form .province-code {
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
 }
 
 #logbook-form .form-grid {

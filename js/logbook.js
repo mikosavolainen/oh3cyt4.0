@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const contests = {
         'generic-serial': { type: 'serial' },
-        'sral-peruskisa': { type: 'serial' },
+        'sral-peruskisa': { type: 'serial-province' },
         'sral-talvi': { type: 'serial' },
         'sral-kalakukko': { type: 'serial' },
         'sral-sainio': { type: 'serial' },
@@ -31,12 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('qsos', JSON.stringify(qsos));
     };
 
-    const getSerialNumber = () => {
-        return parseInt(localStorage.getItem('serialNumber') || '1', 10);
+    const getSerialNumber = (mode) => {
+        const key = `serialNumber_${mode}`;
+        return parseInt(localStorage.getItem(key) || '1', 10);
     };
 
-    const saveSerialNumber = (number) => {
-        localStorage.setItem('serialNumber', String(number));
+    const saveSerialNumber = (mode, number) => {
+        const key = `serialNumber_${mode}`;
+        localStorage.setItem(key, String(number));
     };
 
     const renderQsos = () => {
@@ -73,9 +75,18 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateExchangeSentField = () => {
+        const mode = document.getElementById('mode').value;
+        const rstSent = document.getElementById('rst-sent').value;
+
         if (currentContest.type === 'serial') {
-            const serial = getSerialNumber();
+            const serial = getSerialNumber(mode);
             exchSentInput.value = String(serial).padStart(3, '0');
+            exchSentInput.readOnly = true;
+            exchSentInput.placeholder = '';
+        } else if (currentContest.type === 'serial-province') {
+            const serial = getSerialNumber(mode);
+            const provinceCode = document.getElementById('province-code').value.toUpperCase();
+            exchSentInput.value = `${rstSent} ${String(serial).padStart(3, '0')} ${provinceCode}`;
             exchSentInput.readOnly = true;
             exchSentInput.placeholder = '';
         } else { // static
@@ -108,9 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
         qsos.push(newQso);
         saveQsos(qsos);
 
-        if (currentContest.type === 'serial') {
-            const currentSerial = getSerialNumber();
-            saveSerialNumber(currentSerial + 1);
+        if (currentContest.type === 'serial' || currentContest.type === 'serial-province') {
+            const mode = document.getElementById('mode').value;
+            const currentSerial = getSerialNumber(mode);
+            saveSerialNumber(mode, currentSerial + 1);
         }
 
         renderQsos();
@@ -153,7 +165,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('mode').addEventListener('change', (e) => {
-        localStorage.setItem('selectedMode', e.target.value);
+        const mode = e.target.value;
+        localStorage.setItem('selectedMode', mode);
+
+        // Automatically update RST based on mode
+        const rstSentInput = document.getElementById('rst-sent');
+        if (mode === 'CW') {
+            rstSentInput.value = '599';
+        } else {
+            rstSentInput.value = '59';
+        }
+
+        updateExchangeSentField();
     });
 
     document.getElementById('band').addEventListener('change', (e) => {
@@ -164,6 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentContest.type === 'static') {
             localStorage.setItem('staticExchange', e.target.value);
         }
+    });
+
+    document.getElementById('province-code').addEventListener('input', (e) => {
+        localStorage.setItem('provinceCode', e.target.value.toUpperCase());
+        updateExchangeSentField(); // Update exchange in real-time as province code is typed
     });
 
     const toAdif = (qsos) => {
@@ -224,6 +252,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 exchSentInput.value = staticExchange;
             }
         }
+
+        const provinceCode = localStorage.getItem('provinceCode');
+        if (provinceCode) {
+            document.getElementById('province-code').value = provinceCode;
+        }
     };
 
     // Initial render and setup
@@ -231,4 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderQsos();
     setDateTime();
     updateExchangeSentField();
+
+    // Keep date and time updated
+    setInterval(setDateTime, 1000);
 });
