@@ -55,5 +55,6 @@
     "log.export_adif": "Export to ADIF",
     "log.contest": "Contest",
     "contest.generic_serial": "Generic (Serial #)",
-    "contest.generic_static": "Generic (Static Exch)"
+    "contest.generic_static": "Generic (Static Exch)",
+    "grayline_map_title": "Gray Line Map"
 }

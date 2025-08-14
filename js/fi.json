@@ -55,5 +55,6 @@
     "log.export_adif": "Vie ADIF-muotoon",
     "log.contest": "Kilpailu",
     "contest.generic_serial": "Yleinen (Sarjanumero)",
-    "contest.generic_static": "Yleinen (Kiinteä Exch)"
+    "contest.generic_static": "Yleinen (Kiinteä Exch)",
+    "grayline_map_title": "Hämärävyöhykekartta"
 }
