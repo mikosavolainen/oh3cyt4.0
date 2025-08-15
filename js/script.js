@@ -1,30 +1,30 @@
+const getDescendantProp = (obj, path) => {
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+};
+
+const setLanguage = async (lang) => {
+    const path = window.location.pathname.includes('/pages/') ? '../js/' : 'js/';
+    const response = await fetch(`${path}${lang}.json`);
+    const translations = await response.json();
+
+    document.querySelectorAll('[data-lang]').forEach(element => {
+        const key = element.getAttribute('data-lang');
+        const translation = getDescendantProp(translations, key);
+        if (translation) {
+            if (typeof translation === 'string' && (translation.includes('<') || translation.includes('&'))) {
+                element.innerHTML = translation;
+            } else {
+                element.textContent = translation;
+            }
+        }
+    });
+
+    localStorage.setItem('language', lang);
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     const langEnBtn = document.getElementById('lang-en');
     const langFiBtn = document.getElementById('lang-fi');
-
-    const getDescendantProp = (obj, path) => {
-        return path.split('.').reduce((acc, part) => acc && acc[part], obj);
-    };
-
-    const setLanguage = async (lang) => {
-        const path = window.location.pathname.includes('/pages/') ? '../js/' : 'js/';
-        const response = await fetch(`${path}${lang}.json`);
-        const translations = await response.json();
-
-        document.querySelectorAll('[data-lang]').forEach(element => {
-            const key = element.getAttribute('data-lang');
-            const translation = getDescendantProp(translations, key);
-            if (translation) {
-                if (typeof translation === 'string' && (translation.includes('<') || translation.includes('&'))) {
-                    element.innerHTML = translation;
-                } else {
-                    element.textContent = translation;
-                }
-            }
-        });
-
-        localStorage.setItem('language', lang);
-    };
 
     langEnBtn.addEventListener('click', () => setLanguage('en'));
     langFiBtn.addEventListener('click', () => setLanguage('fi'));
