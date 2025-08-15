@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const exportBtn = document.getElementById('export-cabrillo');
     const contestSelector = document.getElementById('contest');
     const exchSentInput = document.getElementById('exch-sent');
+    const provinceCodeContainer = document.querySelector('.province-code');
 
     // Cabrillo category selectors
     const categoryOperator = document.getElementById('category-operator');
@@ -146,8 +147,23 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(element.id, element.value);
     };
 
+    const updateProvinceCodeVisibility = () => {
+        if (contests[contestSelector.value].type === 'serial-province') {
+            provinceCodeContainer.classList.remove('hidden');
+        } else {
+            provinceCodeContainer.classList.add('hidden');
+        }
+    };
+
     [contestSelector, categoryOperator, categoryBand, categoryMode, categoryPower, document.getElementById('mode'), document.getElementById('band')].forEach(sel => {
-        sel.addEventListener('change', () => saveAndApplySelection(sel));
+        sel.addEventListener('change', () => {
+            saveAndApplySelection(sel);
+            if (sel.id === 'contest') {
+                currentContest = contests[contestSelector.value];
+                updateProvinceCodeVisibility();
+                updateExchangeSentField();
+            }
+        });
     });
 
     document.getElementById('mode').addEventListener('change', () => {
@@ -254,6 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         categoryPower.value = localStorage.getItem('category-power') || 'LOW';
 
         currentContest = contests[contestSelector.value];
+        updateProvinceCodeVisibility(); // Set initial visibility
         if (currentContest.type === 'static') {
             exchSentInput.value = localStorage.getItem('staticExchange') || '';
         }
