@@ -67,5 +67,15 @@
     "contest.cq_ww_dx": "CQ WW DX",
     "contest.iaru_hf": "IARU HF Mestaruus",
     "contest.generic_static": "Muu (Kiinteä sanoma)",
-    "grayline_map_title": "Hämärävyöhykekartta"
+    "grayline_map_title": "Hämärävyöhykekartta",
+    "cabrillo.categories_title": "Cabrillo-kategoriat",
+    "cabrillo.operator": "Operaattori",
+    "cabrillo.band": "Bandi",
+    "cabrillo.mode": "Lähetelaji",
+    "cabrillo.power": "Teho",
+    "cabrillo.modal_title": "Cabrillo-otsaketiedot",
+    "cabrillo.name": "Nimi",
+    "cabrillo.address": "Osoite",
+    "cabrillo.soapbox": "Soapbox",
+    "cabrillo.save_and_export": "Tallenna ja vie"
 }

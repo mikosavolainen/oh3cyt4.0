@@ -67,5 +67,15 @@
     "contest.cq_ww_dx": "CQ WW DX",
     "contest.iaru_hf": "IARU HF Champ",
     "contest.generic_static": "Other (Static Exch)",
-    "grayline_map_title": "Gray Line Map"
+    "grayline_map_title": "Gray Line Map",
+    "cabrillo.categories_title": "Cabrillo Categories",
+    "cabrillo.operator": "Operator",
+    "cabrillo.band": "Band",
+    "cabrillo.mode": "Mode",
+    "cabrillo.power": "Power",
+    "cabrillo.modal_title": "Cabrillo Header Information",
+    "cabrillo.name": "Name",
+    "cabrillo.address": "Address",
+    "cabrillo.soapbox": "Soapbox",
+    "cabrillo.save_and_export": "Save and Export"
 }
