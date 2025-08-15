@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const logbookForm = document.getElementById('logbook-form');
     const logbookTableBody = document.querySelector('#logbook-table tbody');
-    const exportAdifBtn = document.getElementById('export-adif');
+    const exportBtn = document.getElementById('export-cabrillo');
     const contestSelector = document.getElementById('contest');
     const exchSentInput = document.getElementById('exch-sent');
 
@@ -194,35 +194,43 @@ document.addEventListener('DOMContentLoaded', () => {
         updateExchangeSentField(); // Update exchange in real-time as province code is typed
     });
 
-    const toAdif = (qsos) => {
-        let adif = `ADIF Export from OH3CYT Web Logbook\n<EOH>\n\n`;
+    const toCabrillo = (qsos) => {
+        const contest = contestSelector.value.toUpperCase();
+        let cabrillo = `START-OF-LOG: 3.0\n`;
+        cabrillo += `CONTEST: ${contest}\n`;
+        cabrillo += `CALLSIGN: OH3CYT\n`; // Placeholder
+        cabrillo += `CATEGORY-OPERATOR: SINGLE-OP\n`;
+        cabrillo += `CATEGORY-BAND: ALL\n`;
+        cabrillo += `CATEGORY-MODE: MIXED\n`;
+        cabrillo += `CATEGORY-POWER: LOW\n`;
+        cabrillo += `CREATED-BY: OH3CYT Web Logbook\n`;
+        cabrillo += `NAME: \n`;
+        cabrillo += `ADDRESS: \n`;
+        cabrillo += `SOAPBOX: \n`;
+
         qsos.forEach(qso => {
-            adif += `<QSO_DATE:${qso.date.length}>${qso.date.replace(/-/g, '')}\n`;
-            adif += `<TIME_ON:${qso.time.length}>${qso.time.replace(/:/g, '')}\n`;
-            adif += `<CALL:${qso.call.length}>${qso.call.toUpperCase()}\n`;
-            adif += `<BAND:${qso.band.length}>${qso.band.toUpperCase()}\n`;
-            adif += `<MODE:${qso.mode.length}>${qso.mode.toUpperCase()}\n`;
-            adif += `<RST_SENT:${qso.rstSent.length}>${qso.rstSent}\n`;
-            adif += `<RST_RCVD:${qso.rstRcvd.length}>${qso.rstRcvd}\n`;
-            adif += `<SRX_STRING:${qso.exchRcvd.length}>${qso.exchRcvd}\n`;
-            adif += `<STX_STRING:${qso.exchSent.length}>${qso.exchSent}\n`;
-            adif += `<EOR>\n\n`;
+            const freq = qso.band.replace('m', '');
+            const mode = qso.mode === 'SSB' ? 'PH' : qso.mode;
+            const time = qso.time.replace(':', '');
+            cabrillo += `QSO: ${freq} ${mode} ${qso.date} ${time} OH3CYT ${qso.rstSent} ${qso.exchSent} ${qso.call.toUpperCase()} ${qso.rstRcvd} ${qso.exchRcvd}\n`;
         });
-        return adif;
+
+        cabrillo += `END-OF-LOG:\n`;
+        return cabrillo;
     };
 
-    exportAdifBtn.addEventListener('click', () => {
+    exportBtn.addEventListener('click', () => {
         const qsos = getQsos();
         if (qsos.length === 0) {
             alert('Logbook is empty!');
             return;
         }
-        const adifData = toAdif(qsos);
-        const blob = new Blob([adifData], { type: 'text/plain' });
+        const cabrilloData = toCabrillo(qsos);
+        const blob = new Blob([cabrilloData], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `oh3cyt_log_${new Date().toISOString().slice(0,10)}.adi`;
+        a.download = `oh3cyt_log_${new Date().toISOString().slice(0,10)}.log`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
