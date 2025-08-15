@@ -25,12 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const contests = {
         'generic-serial': { type: 'serial' },
         'sral-peruskisa': { type: 'serial-province' },
-        'sral-talvi': { type: 'serial-province' },
-        'sral-kalakukko': { type: 'serial-province' },
-        'sral-sainio': { type: 'serial-province' },
-        'sral-kesakisa': { type: 'serial-province' },
-        'sral-syysottelu': { type: 'serial-province' },
-        'sral-joulu': { type: 'static', exchange: 'HYVÄÄ JOULUA' },
         'sac': { type: 'serial' },
         'cq-wpx': { type: 'serial' },
         'cq-ww-dx': { type: 'static', placeholder: 'Your CQ Zone' },
