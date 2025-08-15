@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const logbookForm = document.getElementById('logbook-form');
     const logbookTableBody = document.querySelector('#logbook-table tbody');
     const exportBtn = document.getElementById('export-cabrillo');
+    const resetSerialBtn = document.getElementById('reset-serial-btn');
     const contestSelector = document.getElementById('contest');
     const exchSentInput = document.getElementById('exch-sent');
     const provinceCodeContainer = document.querySelector('.province-code');
@@ -24,12 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const contests = {
         'generic-serial': { type: 'serial' },
         'sral-peruskisa': { type: 'serial-province' },
-        'sral-talvi': { type: 'serial-province' },
-        'sral-kalakukko': { type: 'serial-province' },
-        'sral-sainio': { type: 'serial-province' },
-        'sral-kesakisa': { type: 'serial-province' },
-        'sral-syysottelu': { type: 'serial-province' },
-        'sral-joulu': { type: 'static', exchange: 'HYVÄÄ JOULUA' },
         'sac': { type: 'serial' },
         'cq-wpx': { type: 'serial' },
         'cq-ww-dx': { type: 'static', placeholder: 'Your CQ Zone' },
@@ -181,6 +176,13 @@ document.addEventListener('DOMContentLoaded', () => {
         updateExchangeSentField();
     });
 
+    document.getElementById('call').addEventListener('keydown', (e) => {
+        if (e.key === 'Shift') {
+            e.preventDefault();
+            document.getElementById('exch-rcvd').focus();
+        }
+    });
+
     const toCabrillo = (qsos) => {
         const cabrilloInfo = JSON.parse(localStorage.getItem('cabrilloInfo')) || {};
         let cabrillo = `START-OF-LOG: 3.0\n`;
@@ -240,6 +242,18 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('click', (event) => {
         if (event.target == cabrilloModal) {
             cabrilloModal.style.display = 'none';
+        }
+    });
+
+    resetSerialBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to reset all serial numbers? This cannot be undone.')) {
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('serialNumber_')) {
+                    localStorage.removeItem(key);
+                }
+            });
+            updateExchangeSentField();
+            alert('Serial numbers have been reset.');
         }
     });
 
