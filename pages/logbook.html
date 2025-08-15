@@ -39,6 +39,50 @@
 
         <section class="logbook-form-section">
             <form id="logbook-form">
+                <fieldset id="cabrillo-category-config">
+                    <legend data-lang="cabrillo.categories_title">Cabrillo Categories</legend>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="category-operator" data-lang="cabrillo.operator">Operator</label>
+                            <select id="category-operator">
+                                <option value="SINGLE-OP" selected>SINGLE-OP</option>
+                                <option value="MULTI-OP">MULTI-OP</option>
+                                <option value="CHECKLOG">CHECKLOG</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="category-band" data-lang="cabrillo.band">Band</label>
+                            <select id="category-band">
+                                <option value="ALL" selected>ALL</option>
+                                <option value="160M">160M</option>
+                                <option value="80M">80M</option>
+                                <option value="40M">40M</option>
+                                <option value="20M">20M</option>
+                                <option value="15M">15M</option>
+                                <option value="10M">10M</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="category-mode" data-lang="cabrillo.mode">Mode</label>
+                            <select id="category-mode">
+                                <option value="MIXED" selected>MIXED</option>
+                                <option value="CW">CW</option>
+                                <option value="SSB">SSB</option>
+                                <option value="RTTY">RTTY</option>
+                                <option value="FM">FM</option>
+                                <option value="DIGI">DIGI</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="category-power" data-lang="cabrillo.power">Power</label>
+                            <select id="category-power">
+                                <option value="HIGH">HIGH</option>
+                                <option value="LOW" selected>LOW</option>
+                                <option value="QRP">QRP</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
                 <div class="contest-config">
                     <div class="form-group contest-selector">
                         <label for="contest" data-lang="log.contest">Contest</label>
@@ -152,6 +196,28 @@
             </div>
             <button id="export-cabrillo" data-lang="log.export_cabrillo">Export to Cabrillo</button>
         </section>
+
+        <div id="cabrillo-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2 data-lang="cabrillo.modal_title">Cabrillo Header Information</h2>
+                <form id="cabrillo-info-form">
+                    <div class="form-group">
+                        <label for="cabrillo-name" data-lang="cabrillo.name">Name</label>
+                        <input type="text" id="cabrillo-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="cabrillo-address" data-lang="cabrillo.address">Address</label>
+                        <input type="text" id="cabrillo-address">
+                    </div>
+                    <div class="form-group">
+                        <label for="cabrillo-soapbox" data-lang="cabrillo.soapbox">Soapbox</label>
+                        <textarea id="cabrillo-soapbox" rows="4"></textarea>
+                    </div>
+                    <button type="submit" id="save-cabrillo-info" data-lang="cabrillo.save_and_export">Save and Export</button>
+                </form>
+            </div>
+        </div>
     </main>
 
     <footer>

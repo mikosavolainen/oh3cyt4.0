@@ -1,9 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Form and table elements
     const logbookForm = document.getElementById('logbook-form');
     const logbookTableBody = document.querySelector('#logbook-table tbody');
     const exportBtn = document.getElementById('export-cabrillo');
     const contestSelector = document.getElementById('contest');
     const exchSentInput = document.getElementById('exch-sent');
+
+    // Cabrillo category selectors
+    const categoryOperator = document.getElementById('category-operator');
+    const categoryBand = document.getElementById('category-band');
+    const categoryMode = document.getElementById('category-mode');
+    const categoryPower = document.getElementById('category-power');
+
+    // Modal elements
+    const cabrilloModal = document.getElementById('cabrillo-modal');
+    const closeModalBtn = document.querySelector('.close-button');
+    const cabrilloInfoForm = document.getElementById('cabrillo-info-form');
+    const cabrilloNameInput = document.getElementById('cabrillo-name');
+    const cabrilloAddressInput = document.getElementById('cabrillo-address');
+    const cabrilloSoapboxInput = document.getElementById('cabrillo-soapbox');
 
     const contests = {
         'generic-serial': { type: 'serial' },
@@ -23,23 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentContest = contests[contestSelector.value];
 
-    const getQsos = () => {
-        return JSON.parse(localStorage.getItem('qsos')) || [];
-    };
-
-    const saveQsos = (qsos) => {
-        localStorage.setItem('qsos', JSON.stringify(qsos));
-    };
-
-    const getSerialNumber = (mode) => {
-        const key = `serialNumber_${mode}`;
-        return parseInt(localStorage.getItem(key) || '1', 10);
-    };
-
-    const saveSerialNumber = (mode, number) => {
-        const key = `serialNumber_${mode}`;
-        localStorage.setItem(key, String(number));
-    };
+    const getQsos = () => JSON.parse(localStorage.getItem('qsos')) || [];
+    const saveQsos = (qsos) => localStorage.setItem('qsos', JSON.stringify(qsos));
+    const getSerialNumber = (mode) => parseInt(localStorage.getItem(`serialNumber_${mode}`) || '1', 10);
+    const saveSerialNumber = (mode, number) => localStorage.setItem(`serialNumber_${mode}`, String(number));
 
     const renderQsos = () => {
         logbookTableBody.innerHTML = '';
@@ -69,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const day = String(now.getUTCDate()).padStart(2, '0');
         const hours = String(now.getUTCHours()).padStart(2, '0');
         const minutes = String(now.getUTCMinutes()).padStart(2, '0');
-
         document.getElementById('date').value = `${year}-${month}-${day}`;
         document.getElementById('time').value = `${hours}:${minutes}`;
     };
@@ -79,14 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const rstSent = document.getElementById('rst-sent').value;
 
         if (currentContest.type === 'serial') {
-            const serial = getSerialNumber(mode);
-            exchSentInput.value = String(serial).padStart(3, '0');
+            exchSentInput.value = String(getSerialNumber(mode)).padStart(3, '0');
             exchSentInput.readOnly = true;
             exchSentInput.placeholder = '';
         } else if (currentContest.type === 'serial-province') {
-            const serial = getSerialNumber(mode);
             const provinceCode = document.getElementById('province-code').value.toUpperCase();
-            exchSentInput.value = `${rstSent} ${String(serial).padStart(3, '0')} ${provinceCode}`;
+            exchSentInput.value = `${rstSent} ${String(getSerialNumber(mode)).padStart(3, '0')} ${provinceCode}`;
             exchSentInput.readOnly = true;
             exchSentInput.placeholder = '';
         } else { // static
@@ -121,30 +120,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (currentContest.type === 'serial' || currentContest.type === 'serial-province') {
             const mode = document.getElementById('mode').value;
-            const currentSerial = getSerialNumber(mode);
-            saveSerialNumber(mode, currentSerial + 1);
+            saveSerialNumber(mode, getSerialNumber(mode) + 1);
         }
 
         renderQsos();
-
-        // Manually clear only the necessary fields for fast contest logging
         document.getElementById('call').value = '';
         document.getElementById('rst-rcvd').value = '59';
         document.getElementById('exch-rcvd').value = '';
-
-        // Restore selections that might have been cleared by reset() if it were used
-        // This is now handled by not calling reset()
-        const selectedContest = localStorage.getItem('selectedContest');
-        if (selectedContest) contestSelector.value = selectedContest;
-        const selectedMode = localStorage.getItem('selectedMode');
-        if (selectedMode) document.getElementById('mode').value = selectedMode;
-        const selectedBand = localStorage.getItem('selectedBand');
-        if (selectedBand) document.getElementById('band').value = selectedBand;
-
-
-        setDateTime(); // Update date/time for next entry
-        updateExchangeSentField(); // Update serial number for next entry
-        document.getElementById('call').focus(); // Set focus to callsign field for next entry
+        setDateTime();
+        updateExchangeSentField();
+        document.getElementById('call').focus();
     });
 
     logbookTableBody.addEventListener('click', (e) => {
@@ -154,63 +139,49 @@ document.addEventListener('DOMContentLoaded', () => {
             qsos.splice(index, 1);
             saveQsos(qsos);
             renderQsos();
-            // Note: Serial number does not decrement on delete, which is correct for contest logs.
         }
     });
 
-    contestSelector.addEventListener('change', (e) => {
-        currentContest = contests[e.target.value];
-        localStorage.setItem('selectedContest', e.target.value);
-        updateExchangeSentField();
+    const saveAndApplySelection = (element) => {
+        localStorage.setItem(element.id, element.value);
+    };
+
+    [contestSelector, categoryOperator, categoryBand, categoryMode, categoryPower, document.getElementById('mode'), document.getElementById('band')].forEach(sel => {
+        sel.addEventListener('change', () => saveAndApplySelection(sel));
     });
 
-    document.getElementById('mode').addEventListener('change', (e) => {
-        const mode = e.target.value;
-        localStorage.setItem('selectedMode', mode);
-
-        // Automatically update RST based on mode
+    document.getElementById('mode').addEventListener('change', () => {
         const rstSentInput = document.getElementById('rst-sent');
-        if (mode === 'CW') {
-            rstSentInput.value = '599';
-        } else {
-            rstSentInput.value = '59';
-        }
-
+        rstSentInput.value = document.getElementById('mode').value === 'CW' ? '599' : '59';
         updateExchangeSentField();
-    });
-
-    document.getElementById('band').addEventListener('change', (e) => {
-        localStorage.setItem('selectedBand', e.target.value);
     });
 
     exchSentInput.addEventListener('input', (e) => {
-        if (currentContest.type === 'static') {
-            localStorage.setItem('staticExchange', e.target.value);
-        }
+        if (currentContest.type === 'static') localStorage.setItem('staticExchange', e.target.value);
     });
 
     document.getElementById('province-code').addEventListener('input', (e) => {
         localStorage.setItem('provinceCode', e.target.value.toUpperCase());
-        updateExchangeSentField(); // Update exchange in real-time as province code is typed
+        updateExchangeSentField();
     });
 
     const toCabrillo = (qsos) => {
-        const contest = contestSelector.value.toUpperCase();
+        const cabrilloInfo = JSON.parse(localStorage.getItem('cabrilloInfo')) || {};
         let cabrillo = `START-OF-LOG: 3.0\n`;
-        cabrillo += `CONTEST: ${contest}\n`;
         cabrillo += `CALLSIGN: OH3CYT\n`; // Placeholder
-        cabrillo += `CATEGORY-OPERATOR: SINGLE-OP\n`;
-        cabrillo += `CATEGORY-BAND: ALL\n`;
-        cabrillo += `CATEGORY-MODE: MIXED\n`;
-        cabrillo += `CATEGORY-POWER: LOW\n`;
+        cabrillo += `CONTEST: ${contestSelector.value.toUpperCase()}\n`;
+        cabrillo += `CATEGORY-OPERATOR: ${categoryOperator.value}\n`;
+        cabrillo += `CATEGORY-BAND: ${categoryBand.value}\n`;
+        cabrillo += `CATEGORY-MODE: ${categoryMode.value}\n`;
+        cabrillo += `CATEGORY-POWER: ${categoryPower.value}\n`;
         cabrillo += `CREATED-BY: OH3CYT Web Logbook\n`;
-        cabrillo += `NAME: \n`;
-        cabrillo += `ADDRESS: \n`;
-        cabrillo += `SOAPBOX: \n`;
+        cabrillo += `NAME: ${cabrilloInfo.name || ''}\n`;
+        cabrillo += `ADDRESS: ${cabrilloInfo.address || ''}\n`;
+        cabrillo += `SOAPBOX: ${(cabrilloInfo.soapbox || '').replace(/\n/g, '\nSOAPBOX: ')}\n`;
 
         qsos.forEach(qso => {
             const freq = qso.band.replace('m', '');
-            const mode = qso.mode === 'SSB' ? 'PH' : qso.mode;
+            const mode = qso.mode === 'SSB' ? 'PH' : qso.mode.toUpperCase();
             const time = qso.time.replace(':', '');
             cabrillo += `QSO: ${freq} ${mode} ${qso.date} ${time} OH3CYT ${qso.rstSent} ${qso.exchSent} ${qso.call.toUpperCase()} ${qso.rstRcvd} ${qso.exchRcvd}\n`;
         });
@@ -219,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return cabrillo;
     };
 
-    exportBtn.addEventListener('click', () => {
+    const performExport = () => {
         const qsos = getQsos();
         if (qsos.length === 0) {
             alert('Logbook is empty!');
@@ -235,36 +206,58 @@ document.addEventListener('DOMContentLoaded', () => {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+    };
+
+    exportBtn.addEventListener('click', () => {
+        const cabrilloInfo = JSON.parse(localStorage.getItem('cabrilloInfo')) || {};
+        if (!cabrilloInfo.name || !cabrilloInfo.address) {
+            cabrilloModal.style.display = 'block';
+        } else {
+            performExport();
+        }
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        cabrilloModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == cabrilloModal) {
+            cabrilloModal.style.display = 'none';
+        }
+    });
+
+    cabrilloInfoForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const cabrilloInfo = {
+            name: cabrilloNameInput.value,
+            address: cabrilloAddressInput.value,
+            soapbox: cabrilloSoapboxInput.value
+        };
+        localStorage.setItem('cabrilloInfo', JSON.stringify(cabrilloInfo));
+        cabrilloModal.style.display = 'none';
+        performExport();
     });
 
     const loadFormState = () => {
-        const selectedContest = localStorage.getItem('selectedContest');
-        if (selectedContest) {
-            contestSelector.value = selectedContest;
-            currentContest = contests[selectedContest];
-        }
+        const cabrilloInfo = JSON.parse(localStorage.getItem('cabrilloInfo')) || {};
+        cabrilloNameInput.value = cabrilloInfo.name || '';
+        cabrilloAddressInput.value = cabrilloInfo.address || '';
+        cabrilloSoapboxInput.value = cabrilloInfo.soapbox || '';
 
-        const selectedMode = localStorage.getItem('selectedMode');
-        if (selectedMode) {
-            document.getElementById('mode').value = selectedMode;
-        }
+        document.getElementById('contest').value = localStorage.getItem('contest') || 'generic-serial';
+        document.getElementById('mode').value = localStorage.getItem('mode') || 'SSB';
+        document.getElementById('band').value = localStorage.getItem('band') || '20m';
+        categoryOperator.value = localStorage.getItem('category-operator') || 'SINGLE-OP';
+        categoryBand.value = localStorage.getItem('category-band') || 'ALL';
+        categoryMode.value = localStorage.getItem('category-mode') || 'MIXED';
+        categoryPower.value = localStorage.getItem('category-power') || 'LOW';
 
-        const selectedBand = localStorage.getItem('selectedBand');
-        if (selectedBand) {
-            document.getElementById('band').value = selectedBand;
-        }
-
+        currentContest = contests[contestSelector.value];
         if (currentContest.type === 'static') {
-            const staticExchange = localStorage.getItem('staticExchange');
-            if (staticExchange) {
-                exchSentInput.value = staticExchange;
-            }
+            exchSentInput.value = localStorage.getItem('staticExchange') || '';
         }
-
-        const provinceCode = localStorage.getItem('provinceCode');
-        if (provinceCode) {
-            document.getElementById('province-code').value = provinceCode;
-        }
+        document.getElementById('province-code').value = localStorage.getItem('provinceCode') || '';
     };
 
     // Initial render and setup
@@ -272,7 +265,5 @@ document.addEventListener('DOMContentLoaded', () => {
     renderQsos();
     setDateTime();
     updateExchangeSentField();
-
-    // Keep date and time updated
     setInterval(setDateTime, 1000);
 });
