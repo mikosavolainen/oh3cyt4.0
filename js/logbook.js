@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const performExport = () => {
         const qsos = getQsos();
         if (qsos.length === 0) {
-            alert('Logbook is empty!');
+            alert(getTranslation('log.alert_logbook_empty'));
             return;
         }
         const cabrilloData = toCabrillo(qsos);
@@ -252,14 +252,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     resetSerialBtn.addEventListener('click', () => {
-        if (confirm('Are you sure you want to reset all serial numbers? This cannot be undone.')) {
+        if (confirm(getTranslation('log.confirm_reset_serial'))) {
             Object.keys(localStorage).forEach(key => {
                 if (key.startsWith('serialNumber_')) {
                     localStorage.removeItem(key);
                 }
             });
             updateExchangeSentField();
-            alert('Serial numbers have been reset.');
+            alert(getTranslation('log.alert_serial_reset'));
         }
     });
 

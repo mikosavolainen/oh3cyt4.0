@@ -1,11 +1,18 @@
+window.translations = {};
+
 const getDescendantProp = (obj, path) => {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+};
+
+const getTranslation = (key) => {
+    return getDescendantProp(window.translations, key) || key;
 };
 
 const setLanguage = async (lang) => {
     const path = window.location.pathname.includes('/pages/') ? '../js/' : 'js/';
     const response = await fetch(`${path}${lang}.json`);
     const translations = await response.json();
+    window.translations = translations;
 
     document.querySelectorAll('[data-lang]').forEach(element => {
         const key = element.getAttribute('data-lang');
