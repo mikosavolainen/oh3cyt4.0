@@ -434,3 +434,8 @@ footer {
 #cabrillo-info-form button:hover {
     background-color: #a06cd5;
 }
+
+/* Helpers */
+.hidden {
+    display: none !important;
+}
