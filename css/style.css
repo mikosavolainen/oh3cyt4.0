@@ -351,6 +351,24 @@ footer {
     background-color: #a06cd5;
 }
 
+#reset-serial-btn {
+    margin-top: 1rem;
+    margin-left: 1rem;
+    padding: 0.8rem 1.5rem;
+    background-color: #cf6679;
+    color: #121212;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+#reset-serial-btn:hover {
+    background-color: #b04d5f;
+}
+
 .delete-qso {
     background-color: #cf6679;
     color: #121212;
