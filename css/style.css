@@ -337,17 +337,18 @@ footer {
 #export-cabrillo {
     margin-top: 1rem;
     padding: 0.8rem 1.5rem;
-    background-color: #03dac6;
+    background-color: #bb86fc;
     color: #121212;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
+    font-size: 1rem;
     transition: background-color 0.3s ease;
 }
 
 #export-cabrillo:hover {
-    background-color: #018786;
+    background-color: #a06cd5;
 }
 
 .delete-qso {
@@ -399,4 +400,37 @@ footer {
     color: #fff;
     text-decoration: none;
     cursor: pointer;
+}
+
+#cabrillo-info-form .form-group {
+    margin-bottom: 1rem;
+}
+
+#cabrillo-info-form input, #cabrillo-info-form textarea {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #121212;
+    border: 1px solid #333;
+    color: #e0e0e0;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+#cabrillo-info-form button {
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    background-color: #bb86fc;
+    color: #121212;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+#cabrillo-info-form button:hover {
+    background-color: #a06cd5;
 }
