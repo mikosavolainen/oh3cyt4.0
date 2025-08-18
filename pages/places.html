@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/papaparse/5.3.2/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/maidenhead-locator/maidenhead-locator.min.js"></script>
 </head>
 <body>
     <header>
@@ -35,8 +37,18 @@
         <section class="places-search-section">
             <div class="form-grid">
                 <div class="form-group">
+                    <label for="program-select" data-lang="places.program">Program</label>
+                    <select id="program-select">
+                        <option value="all" data-lang="places.all_programs">All</option>
+                        <option value="pota" data-lang="places.pota">POTA</option>
+                        <option value="wwff" data-lang="places.wwff">WWFF</option>
+                        <option value="sota" data-lang="places.sota">SOTA</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="search-input" data-lang="places.search">Search</label>
-                    <input type="text" id="search-input" placeholder="Search for places...">
+                    <input type="text" id="search-input" list="place-suggestions" placeholder="Search for places...">
+                    <datalist id="place-suggestions"></datalist>
                 </div>
                 <div class="form-group">
                     <label for="grid-locator-input" data-lang="places.grid_locator">Your Grid Locator</label>
@@ -55,6 +67,7 @@
                 <table id="places-table">
                     <thead>
                         <tr>
+                            <th data-lang="places.table.program">Program</th>
                             <th data-lang="places.table.name">Name</th>
                             <th data-lang="places.table.grid_locator">Grid Locator</th>
                             <th data-lang="places.table.heading">Heading</th>
@@ -86,8 +99,6 @@
         <p>&copy; 2024 OH3CYT. All rights reserved.</p>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/papaparse/5.3.2/papaparse.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/maidenhead-locator/maidenhead-locator.min.js"></script>
     <script src="../js/script.js"></script>
     <script src="../js/places.js"></script>
 </body>
