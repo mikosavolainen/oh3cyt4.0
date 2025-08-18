@@ -466,6 +466,10 @@ footer {
     border-radius: 8px;
 }
 
+.places-search-section .form-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
 .places-map-section {
     margin-top: 2rem;
 }
