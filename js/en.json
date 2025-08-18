@@ -94,5 +94,13 @@
     "cabrillo.cat_mode_digi": "DIGI",
     "cabrillo.cat_power_high": "HIGH",
     "cabrillo.cat_power_low": "LOW",
-    "cabrillo.cat_power_qrp": "QRP"
+    "cabrillo.cat_power_qrp": "QRP",
+    "places": "Places",
+    "places_title": "Ham Radio Places",
+    "places.search": "Search",
+    "places.grid_locator": "Your Grid Locator",
+    "places.search_results": "Search Results",
+    "places.table.name": "Name",
+    "places.table.grid_locator": "Grid Locator",
+    "places.table.heading": "Heading"
 }

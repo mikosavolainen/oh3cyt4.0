@@ -95,5 +95,13 @@
     "cabrillo.cat_mode_digi": "DIGI",
     "cabrillo.cat_power_high": "HIGH",
     "cabrillo.cat_power_low": "LOW",
-    "cabrillo.cat_power_qrp": "QRP"
+    "cabrillo.cat_power_qrp": "QRP",
+    "places": "Paikat",
+    "places_title": "Radioamatööripaikat",
+    "places.search": "Haku",
+    "places.grid_locator": "Oma ruutulokaattorisi",
+    "places.search_results": "Hakutulokset",
+    "places.table.name": "Nimi",
+    "places.table.grid_locator": "Ruutulokaattori",
+    "places.table.heading": "Suuntima"
 }
