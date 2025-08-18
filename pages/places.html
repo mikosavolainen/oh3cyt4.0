@@ -3,36 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OH3CYT - Ham Radio</title>
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
-    <!-- End Google Tag Manager -->
+    <title>OH3CYT - Ham Radio Places</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet"></script>
 </head>
 <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
-    <div id="solar-storm-alert" class="solar-storm-alert" style="display: none;">
-        <p data-lang="solarStorm.alert"><strong>ALERT:</strong> Geomagnetic Storm in Progress!</p>
-    </div>
-
     <header>
         <nav>
             <div class="logo">
-                <a href="index.html">OH3CYT</a>
+                <a href="../index.html">OH3CYT</a>
             </div>
             <ul class="nav-links">
-                <li><a href="index.html" data-lang="home">Home</a></li>
-                <li><a href="pages/equipment.html" data-lang="equipment">Equipment</a></li>
-                <li><a href="pages/logbook.html" data-lang="logbook">Logbook</a></li>
-                <li><a href="pages/places.html" data-lang="places">Places</a></li>
+                <li><a href="../index.html" data-lang="home">Home</a></li>
+                <li><a href="equipment.html" data-lang="equipment">Equipment</a></li>
+                <li><a href="logbook.html" data-lang="logbook">Logbook</a></li>
+                <li><a href="places.html" data-lang="places">Places</a></li>
             </ul>
             <div class="lang-switcher">
                 <button id="lang-en">EN</button>
@@ -43,32 +29,41 @@
 
     <main>
         <section class="hero">
-            <h1 data-lang="welcome_title">Welcome to my website</h1>
-            <p data-lang="welcome_message">This is the personal website of OH3CYT, a ham radio operator from Finland.</p>
+            <h1 data-lang="places_title">Ham Radio Places</h1>
         </section>
 
-        <section class="solar-data">
-            <h2 data-lang="solar_data_title">Live Solar Data</h2>
-            <div class="data-grid">
-                <div class="data-item">
-                    <span class="label" data-lang="sfi_label">SFI:</span>
-                    <span id="sfi-value">--</span>
+        <section class="places-search-section">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="search-input" data-lang="places.search">Search</label>
+                    <input type="text" id="search-input" placeholder="Search for places...">
                 </div>
-                <div class="data-item">
-                    <span class="label" data-lang="k_index_label">K-Index:</span>
-                    <span id="k-index-value">--</span>
-                </div>
-                <div class="data-item">
-                    <span class="label" data-lang="a_index_label">A-Index:</span>
-                    <span id="a-index-value">--</span>
+                <div class="form-group">
+                    <label for="grid-locator-input" data-lang="places.grid_locator">Your Grid Locator</label>
+                    <input type="text" id="grid-locator-input" placeholder="e.g., KP20le">
                 </div>
             </div>
         </section>
 
-        <section class="logbook">
-            <h2 data-lang="latest_qsos_title">Latest QSOs</h2>
-            <div class="iframe-container">
-                <iframe align="top" frameborder="0" height="500" scrolling="yes" src="https://logbook.qrz.com/lbstat/OH3CYT/" width="640"></iframe>
+        <section class="places-map-section">
+            <div id="places-map"></div>
+        </section>
+
+        <section class="places-table-section">
+            <h2 data-lang="places.search_results">Search Results</h2>
+            <div class="table-container">
+                <table id="places-table">
+                    <thead>
+                        <tr>
+                            <th data-lang="places.table.name">Name</th>
+                            <th data-lang="places.table.grid_locator">Grid Locator</th>
+                            <th data-lang="places.table.heading">Heading</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Search results will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
             </div>
         </section>
     </main>
@@ -91,6 +86,9 @@
         <p>&copy; 2024 OH3CYT. All rights reserved.</p>
     </footer>
 
-    <script src="js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/papaparse/5.3.2/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/maidenhead-locator/maidenhead-locator.min.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/places.js"></script>
 </body>
 </html>

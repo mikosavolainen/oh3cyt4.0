@@ -457,3 +457,25 @@ footer {
 .hidden {
     display: none !important;
 }
+
+/* Places Page */
+.places-search-section {
+    margin-top: 2rem;
+    padding: 2rem;
+    background-color: #1f1f1f;
+    border-radius: 8px;
+}
+
+.places-map-section {
+    margin-top: 2rem;
+}
+
+#places-map {
+    height: 500px;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.places-table-section {
+    margin-top: 2rem;
+}
