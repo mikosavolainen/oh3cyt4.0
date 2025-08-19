@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fetchData = async () => {
         const potaPromise = Papa.parsePromise('../data/all_parks_ext.csv', { download: true, header: true });
         const wwffPromise = Papa.parsePromise('../data/wwff_directory.csv', { download: true, header: true });
-        const sotaPromise = Papa.parsePromise('../data/summitlist.csv', { download: true, header: true });
+        const sotaPromise = Papa.parsePromise('../data/summitslist.csv', { download: true, header: true });
 
         const [potaResults, wwffResults, sotaResults] = await Promise.all([potaPromise, wwffPromise, sotaPromise]);
 
