@@ -483,3 +483,17 @@ footer {
 .places-table-section {
     margin-top: 2rem;
 }
+
+#places-table th {
+    background-color: #2a2a2a;
+}
+
+#places-table tbody tr:hover {
+    background-color: #2c2c2c;
+}
+
+#places-table .loading-row td {
+    text-align: center;
+    padding: 2rem;
+    color: #888;
+}

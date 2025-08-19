@@ -1,0 +1,4 @@
+SummitCode,AssociationName,RegionName,SummitName,AltM,AltFt,GridRef1,GridRef2,Longitude,Latitude,Points,BonusPoints,ValidFrom,ValidTo,ActivationCount,ActivationDate,ActivationCall
+"OH/KI-001","Finland","Kainuu","Iso Tuomivaara","300","984","","KP44","29.0","64.0",1,0,"2024-01-01","",0,"",""
+"OH/KI-002","Finland","Kainuu","Paljakkavaara","384","1260","","KP44","28.0","64.0",1,0,"2024-01-01","",0,"",""
+"OH/KI-003","Finland","Kainuu","Ukkohalla","356","1168","","KP44","27.0","64.0",1,0,"2024-01-01","",0,"",""
