@@ -14,27 +14,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const suggestionsDatalist = document.getElementById('place-suggestions');
 
     const fetchData = async () => {
-        const potaPromise = Papa.parsePromise('../data/all_parks_ext.csv', { download: true, header: true });
-        const wwffPromise = Papa.parsePromise('../data/wwff_directory.csv', { download: true, header: true });
-        const sotaPromise = Papa.parsePromise('../data/summitslist.csv', { download: true, header: true });
+        try {
+            const potaPromise = Papa.parsePromise('../data/all_parks_ext.csv', { download: true, header: true, skipEmptyLines: true });
+            const wwffPromise = Papa.parsePromise('../data/wwff_directory.csv', { download: true, header: true, skipEmptyLines: true });
+            const sotaPromise = Papa.parsePromise('../data/summitlist.csv', { download: true, header: true, skipEmptyLines: true });
 
-        const [potaResults, wwffResults, sotaResults] = await Promise.all([potaPromise, wwffPromise, sotaPromise]);
+            const [potaResults, wwffResults, sotaResults] = await Promise.all([potaPromise, wwffPromise, sotaPromise]);
 
-        const potaData = potaResults.data.map(p => ({ program: 'POTA', ref: p.reference, name: p.name, locator: p.grid, lat: p.latitude, lon: p.longitude }));
-        const wwffData = wwffResults.data.map(p => ({ program: 'WWFF', ref: p.reference, name: p.name, locator: p.iaruLocator, lat: p.latitude, lon: p.longitude }));
-        const sotaData = sotaResults.data.map(p => ({ program: 'SOTA', ref: p.SummitCode, name: p.SummitName, locator: p.GridRef1, lat: p.Latitude, lon: p.Longitude }));
+            const potaData = potaResults.data.map(p => ({ program: 'POTA', ref: String(p.reference || ''), name: String(p.name || ''), locator: String(p.grid || ''), lat: p.latitude, lon: p.longitude }));
+            const wwffData = wwffResults.data.map(p => ({ program: 'WWFF', ref: String(p.reference || ''), name: String(p.name || ''), locator: String(p.iaruLocator || ''), lat: p.latitude, lon: p.longitude }));
+            const sotaData = sotaResults.data.map(p => ({ program: 'SOTA', ref: String(p.SummitCode || ''), name: String(p.SummitName || ''), locator: String(p.GridRef1 || ''), lat: p.Latitude, lon: p.Longitude }));
 
-        allPlaces = [...potaData, ...wwffData, ...sotaData];
-        populateSuggestions(allPlaces);
-        displayPlaces(allPlaces);
+            allPlaces = [...potaData, ...wwffData, ...sotaData];
+            populateSuggestions(allPlaces);
+            displayPlaces(allPlaces);
+        } catch (error) {
+            console.error("Failed to fetch or parse CSV data:", error);
+            placesTableBody.innerHTML = '<tr><td colspan="4">Error loading place data. Please check the data files and try again.</td></tr>';
+        }
     };
 
     const populateSuggestions = (places) => {
         suggestionsDatalist.innerHTML = '';
         places.forEach(place => {
-            const option = document.createElement('option');
-            option.value = place.ref;
-            suggestionsDatalist.appendChild(option);
+            if (place.ref) {
+                const option = document.createElement('option');
+                option.value = place.ref;
+                suggestionsDatalist.appendChild(option);
+            }
         });
     };
 
@@ -43,44 +50,46 @@ document.addEventListener('DOMContentLoaded', () => {
         placesTableBody.innerHTML = '';
 
         places.forEach(place => {
-            if (place.lat && place.lon) {
-                const latLng = [parseFloat(place.lat), parseFloat(place.lon)];
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${place.program}</td>
+                <td>${place.name} (${place.ref})</td>
+                <td data-locator="${place.locator || ''}">${place.locator || 'N/A'}</td>
+                <td></td>`;
+            placesTableBody.appendChild(row);
+
+            const lat = parseFloat(place.lat);
+            const lon = parseFloat(place.lon);
+
+            if (!isNaN(lat) && !isNaN(lon)) {
+                const latLng = [lat, lon];
                 const marker = L.marker(latLng).bindPopup(`<b>${place.program} - ${place.ref}</b><br>${place.name}`);
                 markers.addLayer(marker);
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${place.program}</td>
-                    <td>${place.name} (${place.ref})</td>
-                    <td>${place.locator || 'N/A'}</td>
-                    <td></td>`;
-                placesTableBody.appendChild(row);
             } else if (place.locator) {
                 try {
                     const latLng = maidenhead.toLatLng(place.locator);
                     const marker = L.marker(latLng).bindPopup(`<b>${place.program} - ${place.ref}</b><br>${place.name}`);
                     markers.addLayer(marker);
-
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${place.program}</td>
-                        <td>${place.name} (${place.ref})</td>
-                        <td>${place.locator}</td>
-                        <td></td>`;
-                    placesTableBody.appendChild(row);
                 } catch (e) {
-                    console.error(`Invalid grid locator: ${place.locator}`);
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${place.program}</td>
-                        <td>${place.name} (${place.ref})</td>
-                        <td>N/A</td>
-                        <td></td>`;
-                    placesTableBody.appendChild(row);
+                    // This locator is invalid, do nothing. The table already shows the locator or N/A.
                 }
             }
         });
-        updateHeadings(gridLocatorInput.value ? maidenhead.toLatLng(gridLocatorInput.value) : null);
+
+        // A small delay to ensure the DOM is updated before calculating headings
+        setTimeout(() => {
+            const userGrid = gridLocatorInput.value;
+            if (userGrid && userGrid.length >= 4) {
+                try {
+                    const userLatLng = maidenhead.toLatLng(userGrid);
+                    updateHeadings(userLatLng);
+                } catch (e) {
+                    updateHeadings(null);
+                }
+            } else {
+                updateHeadings(null);
+            }
+        }, 0);
     };
 
     const filterPlaces = () => {
@@ -95,8 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (searchTerm) {
             filtered = filtered.filter(p =>
-                p.ref.toLowerCase().includes(searchTerm) ||
-                p.name.toLowerCase().includes(searchTerm)
+                (p.ref && p.ref.toLowerCase().includes(searchTerm)) ||
+                (p.name && p.name.toLowerCase().includes(searchTerm))
             );
         }
 
@@ -108,9 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
         rows.forEach(row => {
             const locatorCell = row.cells[2];
             const headingCell = row.cells[3];
-            if (userLatLng && locatorCell && locatorCell.textContent !== 'N/A') {
+            const locator = locatorCell.dataset.locator;
+
+            if (userLatLng && locator) {
                 try {
-                    const placeLatLng = maidenhead.toLatLng(locatorCell.textContent);
+                    const placeLatLng = maidenhead.toLatLng(locator);
                     const heading = calculateHeading(userLatLng, placeLatLng);
                     headingCell.textContent = `${heading.toFixed(0)}°`;
                 } catch (e) {

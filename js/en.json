@@ -108,5 +108,6 @@
     "places.table.program": "Program",
     "places.table.name": "Name",
     "places.table.grid_locator": "Grid Locator",
-    "places.table.heading": "Heading"
+    "places.table.heading": "Heading",
+    "places.loading": "Loading..."
 }
