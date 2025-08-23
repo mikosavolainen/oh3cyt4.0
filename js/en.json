@@ -111,5 +111,6 @@
     "places.table.heading": "Heading",
     "places.table.actions": "Actions",
     "places.loading": "Loading...",
-    "places.search_controls_title": "Search & Filter"
+    "places.search_controls_title": "Search & Filter",
+    "places.data_status_title": "Data Status"
 }
