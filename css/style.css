@@ -64,7 +64,7 @@ nav {
 }
 
 /* Main Content */
-main {
+body:not(.places-body) main {
     max-width: 1200px;
     margin: 2rem auto;
     padding: 0 1rem;
@@ -512,4 +512,74 @@ footer {
 
 .view-btn:hover {
     background-color: #a06cd5;
+}
+
+/* New Places Page Layout */
+.places-container {
+    display: flex;
+    flex-wrap: wrap;
+    height: calc(100vh - 80px); /* Full height minus header */
+}
+
+#sidebar {
+    width: 380px;
+    background-color: #1f1f1f;
+    padding: 1rem;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+#sidebar .places-search-section, #sidebar .places-table-section {
+    margin-top: 0;
+    padding: 0;
+    background-color: transparent;
+    border-radius: 0;
+}
+
+#sidebar .table-container {
+    max-height: calc(100vh - 350px); /* Adjust as needed */
+    overflow-y: auto;
+}
+
+#map-container {
+    flex-grow: 1;
+    height: 100%;
+    position: relative;
+}
+
+#places-map {
+    width: 100%;
+    height: 100%;
+}
+
+#map-message {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000; /* Ensure it's above the map */
+    display: none; /* Hidden by default */
+}
+
+
+@media (max-width: 768px) {
+    .places-container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    #sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 50vh;
+    }
+
+    #map-container {
+        height: 50vh;
+    }
 }

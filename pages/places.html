@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/papaparse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/maidenhead-locator/maidenhead-locator.min.js"></script>
 </head>
-<body>
+<body class="places-body">
     <header>
         <nav>
             <div class="logo">
@@ -29,76 +29,58 @@
         </nav>
     </header>
 
-    <main>
-        <section class="hero">
-            <h1 data-lang="places_title">Ham Radio Places</h1>
-        </section>
+    <div class="places-container">
+        <aside id="sidebar">
+            <section class="places-search-section">
+                <h2 data-lang="places.search_controls_title">Search & Filter</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="program-select" data-lang="places.program">Program</label>
+                        <select id="program-select">
+                            <option value="all" data-lang="places.all_programs">All</option>
+                            <option value="pota" data-lang="places.pota">POTA</option>
+                            <option value="wwff" data-lang="places.wwff">WWFF</option>
+                            <option value="sota" data-lang="places.sota">SOTA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="search-input" data-lang="places.search">Search</label>
+                        <input type="text" id="search-input" list="place-suggestions" placeholder="Search for places...">
+                        <datalist id="place-suggestions"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label for="grid-locator-input" data-lang="places.grid_locator">Your Grid Locator</label>
+                        <input type="text" id="grid-locator-input" placeholder="e.g., KP20le">
+                    </div>
+                </div>
+            </section>
 
-        <section class="places-search-section">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="program-select" data-lang="places.program">Program</label>
-                    <select id="program-select">
-                        <option value="all" data-lang="places.all_programs">All</option>
-                        <option value="pota" data-lang="places.pota">POTA</option>
-                        <option value="wwff" data-lang="places.wwff">WWFF</option>
-                        <option value="sota" data-lang="places.sota">SOTA</option>
-                    </select>
+            <section class="places-table-section">
+                <h2 data-lang="places.search_results">Results</h2>
+                <div class="table-container">
+                    <table id="places-table">
+                        <thead>
+                            <tr>
+                                <th data-lang="places.table.program">Program</th>
+                                <th data-lang="places.table.name">Name</th>
+                                <th data-lang="places.table.grid_locator">Grid Locator</th>
+                                <th data-lang="places.table.heading">Heading</th>
+                                <th data-lang="places.table.actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="loading-row"><td colspan="5" data-lang="places.loading">Loading...</td></tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="form-group">
-                    <label for="search-input" data-lang="places.search">Search</label>
-                    <input type="text" id="search-input" list="place-suggestions" placeholder="Search for places...">
-                    <datalist id="place-suggestions"></datalist>
-                </div>
-                <div class="form-group">
-                    <label for="grid-locator-input" data-lang="places.grid_locator">Your Grid Locator</label>
-                    <input type="text" id="grid-locator-input" placeholder="e.g., KP20le">
-                </div>
-            </div>
-        </section>
+            </section>
+        </aside>
 
-        <section class="places-map-section">
+        <div id="map-container">
             <div id="places-map"></div>
-        </section>
-
-        <section class="places-table-section">
-            <h2 data-lang="places.search_results">Search Results</h2>
-            <div class="table-container">
-                <table id="places-table">
-                    <thead>
-                        <tr>
-                            <th data-lang="places.table.program">Program</th>
-                            <th data-lang="places.table.name">Name</th>
-                            <th data-lang="places.table.grid_locator">Grid Locator</th>
-                            <th data-lang="places.table.heading">Heading</th>
-                            <th data-lang="places.table.actions">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="loading-row"><td colspan="5" data-lang="places.loading">Loading...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="social-links">
-            <a href="https://github.com/your_username" target="_blank">
-                <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-                <span data-lang="github">Github</span>
-            </a>
-            <a href="https://www.qrz.com/db/OH3CYT" target="_blank">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 50 24" fill="white"><style>.qrz-text { font: bold 20px sans-serif; }</style><text x="0" y="18" class="qrz-text">QRZ</text></svg>
-                <span data-lang="qrz">QRZ</span>
-            </a>
-            <a href="https://oh3ac.oh3cyt.com" target="_blank">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12 L12 22 M8 22 L16 22 M12 12 L20 4 M12 12 L4 4 M8 12 L16 12"/></svg>
-                <span data-lang="websdr">WebSDR</span>
-            </a>
+            <div id="map-message"></div>
         </div>
-        <p>&copy; 2024 OH3CYT. All rights reserved.</p>
-    </footer>
+    </div>
 
     <script src="../js/script.js"></script>
     <script src="../js/places.js"></script>
