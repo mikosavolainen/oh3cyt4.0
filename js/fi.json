@@ -113,5 +113,6 @@
     "places.table.actions": "Toiminnot",
     "places.loading": "Ladataan...",
     "places.search_controls_title": "Haku & suodatus",
-    "places.data_status_title": "Datan tila"
+    "places.data_status_title": "Datan tila",
+    "places.debug_log_title": "Debug-loki"
 }

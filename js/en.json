@@ -112,5 +112,6 @@
     "places.table.actions": "Actions",
     "places.loading": "Loading...",
     "places.search_controls_title": "Search & Filter",
-    "places.data_status_title": "Data Status"
+    "places.data_status_title": "Data Status",
+    "places.debug_log_title": "Debug Log"
 }
