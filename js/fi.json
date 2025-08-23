@@ -112,5 +112,6 @@
     "places.table.heading": "Suuntima",
     "places.table.actions": "Toiminnot",
     "places.loading": "Ladataan...",
-    "places.search_controls_title": "Haku & suodatus"
+    "places.search_controls_title": "Haku & suodatus",
+    "places.data_status_title": "Datan tila"
 }

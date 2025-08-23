@@ -26,40 +26,59 @@ document.addEventListener('DOMContentLoaded', () => {
     const placesTableBody = document.querySelector('#places-table tbody');
     const suggestionsDatalist = document.getElementById('place-suggestions');
     const mapMessage = document.getElementById('map-message');
+    const statusPota = document.querySelector('#status-pota span');
+    const statusWwff = document.querySelector('#status-wwff span');
+    const statusSota = document.querySelector('#status-sota span');
 
     // --- DATA FETCHING ---
     const fetchData = async () => {
-        try {
-            const potaPromise = Papa.parsePromise('../data/all_parks_ext.csv', { download: true, header: true, skipEmptyLines: true });
-            const wwffPromise = Papa.parsePromise('../data/wwff_directory.csv', { download: true, header: true, skipEmptyLines: true });
-            const sotaPromise = Papa.parsePromise('../data/summitlist.csv', { download: true, header: true, skipEmptyLines: true });
+        const sources = [
+            { name: 'POTA', url: '../data/all_parks_ext.csv', statusEl: statusPota, mapper: p => ({ program: 'POTA', ref: String(p.reference || ''), name: String(p.name || ''), locator: String(p.grid || ''), lat: p.latitude, lon: p.longitude }) },
+            { name: 'WWFF', url: '../data/wwff_directory.csv', statusEl: statusWwff, mapper: p => ({ program: 'WWFF', ref: String(p.reference || ''), name: String(p.name || ''), locator: String(p.iaruLocator || ''), lat: p.latitude, lon: p.longitude }) },
+            { name: 'SOTA', url: '../data/summitlist.csv', statusEl: statusSota, mapper: p => ({ program: 'SOTA', ref: String(p.SummitCode || ''), name: String(p.SummitName || ''), locator: String(p.GridRef1 || ''), lat: p.Latitude, lon: p.Longitude }) }
+        ];
 
-            const [potaResults, wwffResults, sotaResults] = await Promise.all([potaPromise, wwffPromise, sotaPromise]);
+        let loadedPlaces = [];
+        let hasErrors = false;
 
-            const potaData = potaResults.data.map(p => ({ program: 'POTA', ref: String(p.reference || ''), name: String(p.name || ''), locator: String(p.grid || ''), lat: p.latitude, lon: p.longitude }));
-            const wwffData = wwffResults.data.map(p => ({ program: 'WWFF', ref: String(p.reference || ''), name: String(p.name || ''), locator: String(p.iaruLocator || ''), lat: p.latitude, lon: p.longitude }));
-            const sotaData = sotaResults.data.map(p => ({ program: 'SOTA', ref: String(p.SummitCode || ''), name: String(p.SummitName || ''), locator: String(p.GridRef1 || ''), lat: p.Latitude, lon: p.Longitude }));
+        for (const source of sources) {
+            try {
+                const results = await Papa.parsePromise(source.url, { download: true, header: true, skipEmptyLines: true });
+                if (results.errors.length > 0) {
+                    throw new Error(`Parsing errors in ${source.name}`);
+                }
+                const mappedData = results.data.map(source.mapper);
+                loadedPlaces.push(...mappedData);
+                source.statusEl.textContent = 'Loaded';
+                source.statusEl.className = 'status-success';
+            } catch (error) {
+                console.error(`Failed to load or parse ${source.name} data:`, error);
+                source.statusEl.textContent = 'Failed';
+                source.statusEl.className = 'status-error';
+                hasErrors = true;
+            }
+        }
 
-            allPlaces = [...potaData, ...wwffData, ...sotaData]
-                .filter(p => p.ref)
-                .map(place => {
-                    const lat = parseFloat(place.lat);
-                    const lon = parseFloat(place.lon);
-                    if (!isNaN(lat) && !isNaN(lon)) {
-                        place.latLng = [lat, lon];
-                    } else if (place.locator) {
-                        try {
-                            place.latLng = maidenhead.toLatLng(place.locator);
-                        } catch (e) { /* Invalid locator */ }
-                    }
-                    return place;
-                });
+        allPlaces = loadedPlaces
+            .filter(p => p.ref)
+            .map(place => {
+                const lat = parseFloat(place.lat);
+                const lon = parseFloat(place.lon);
+                if (!isNaN(lat) && !isNaN(lon)) {
+                    place.latLng = [lat, lon];
+                } else if (place.locator) {
+                    try {
+                        place.latLng = maidenhead.toLatLng(place.locator);
+                    } catch (e) { /* Invalid locator */ }
+                }
+                return place;
+            });
 
-            populateSuggestions(allPlaces);
-            filterAndDisplay(); // Initial display
-        } catch (error) {
-            console.error("Failed to fetch or parse CSV data:", error);
-            placesTableBody.innerHTML = '<tr><td colspan="5">Error loading place data. Please check the data files and try again.</td></tr>';
+        populateSuggestions(allPlaces);
+        filterAndDisplay(); // Initial display
+
+        if (hasErrors) {
+            placesTableBody.innerHTML = '<tr><td colspan="5">Warning: One or more data files failed to load. Results may be incomplete.</td></tr>';
         }
     };
 
@@ -80,22 +99,16 @@ document.addEventListener('DOMContentLoaded', () => {
         placesTableBody.innerHTML = '';
 
         if (places.length === 0) {
-            placesTableBody.innerHTML = '<tr><td colspan="5">No places found.</td></tr>';
+            if (map.getZoom() >= MIN_ZOOM_TO_SHOW) {
+                 placesTableBody.innerHTML = '<tr><td colspan="5">No places found matching your criteria.</td></tr>';
+            }
             return;
         }
 
         const mapBounds = map.getBounds();
-        let visiblePlaces = 0;
+        let visiblePlacesInTable = [];
 
         places.forEach(place => {
-            const isVisible = place.latLng && mapBounds.contains(place.latLng);
-            if (isVisible) {
-                visiblePlaces++;
-                const marker = L.marker(place.latLng, { icon: iconMap[place.program] || L.divIcon() })
-                    .bindPopup(`<b>${place.program} - ${place.ref}</b><br>${place.name}`);
-                markers.addLayer(marker);
-            }
-
             // Add all filtered places to the table
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -107,8 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
             placesTableBody.appendChild(row);
 
             // But only add markers for visible ones
-            if (isVisible) {
-                visiblePlaces++;
+            const isVisibleOnMap = place.latLng && mapBounds.contains(place.latLng);
+            if (isVisibleOnMap) {
                 const marker = L.marker(place.latLng, { icon: iconMap[place.program] || L.divIcon() })
                     .bindPopup(`<b>${place.program} - ${place.ref}</b><br>${place.name}`);
                 markers.addLayer(marker);
@@ -152,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const exactMatch = filtered.find(p => p.ref.toLowerCase() === searchTerm);
             if (exactMatch) {
                 filtered = [exactMatch];
-                 // Auto-zoom if a single exact match is found
                 if (exactMatch.latLng) {
                     map.setView(exactMatch.latLng, 13);
                 }
