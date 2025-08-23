@@ -613,3 +613,23 @@ footer {
 #data-status-list .status-error {
     color: #F44336;
 }
+
+/* Debug Log Panel */
+#debug-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #333;
+}
+
+#debug-log {
+    background-color: #111;
+    border: 1px solid #444;
+    padding: 0.5rem;
+    height: 150px;
+    overflow-y: auto;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8rem;
+    color: #ccc;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
