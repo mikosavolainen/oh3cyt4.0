@@ -110,5 +110,6 @@
     "places.table.name": "Nimi",
     "places.table.grid_locator": "Ruutulokaattori",
     "places.table.heading": "Suuntima",
+    "places.table.actions": "Toiminnot",
     "places.loading": "Ladataan..."
 }

@@ -497,3 +497,19 @@ footer {
     padding: 2rem;
     color: #888;
 }
+
+.view-btn {
+    padding: 0.4rem 0.8rem;
+    background-color: #bb86fc;
+    color: #121212;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.view-btn:hover {
+    background-color: #a06cd5;
+}

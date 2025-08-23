@@ -1,8 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const map = L.map('places-map').setView([61.5, 25.5], 5); // Default view over Finland
+    const map = L.map('places-map').setView([61.5, 25.5], 6); // Default view over Finland
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
+
+    // Define custom icons
+    const potaIcon = L.icon({ iconUrl: '../images/pota_icon.svg', iconSize: [32, 32], iconAnchor: [16, 16] });
+    const wwffIcon = L.icon({ iconUrl: '../images/wwff_icon.svg', iconSize: [32, 32], iconAnchor: [16, 16] });
+    const sotaIcon = L.icon({ iconUrl: '../images/sota_icon.svg', iconSize: [32, 32], iconAnchor: [16, 16] });
+    const iconMap = { POTA: potaIcon, WWFF: wwffIcon, SOTA: sotaIcon };
 
     let allPlaces = [];
     const markers = L.layerGroup().addTo(map);
@@ -25,12 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const wwffData = wwffResults.data.map(p => ({ program: 'WWFF', ref: String(p.reference || ''), name: String(p.name || ''), locator: String(p.iaruLocator || ''), lat: p.latitude, lon: p.longitude }));
             const sotaData = sotaResults.data.map(p => ({ program: 'SOTA', ref: String(p.SummitCode || ''), name: String(p.SummitName || ''), locator: String(p.GridRef1 || ''), lat: p.Latitude, lon: p.Longitude }));
 
-            allPlaces = [...potaData, ...wwffData, ...sotaData];
+            allPlaces = [...potaData, ...wwffData, ...sotaData].filter(p => p.ref); // Filter out places without a reference
             populateSuggestions(allPlaces);
             displayPlaces(allPlaces);
         } catch (error) {
             console.error("Failed to fetch or parse CSV data:", error);
-            placesTableBody.innerHTML = '<tr><td colspan="4">Error loading place data. Please check the data files and try again.</td></tr>';
+            placesTableBody.innerHTML = '<tr><td colspan="5">Error loading place data. Please check the data files and try again.</td></tr>';
         }
     };
 
@@ -49,47 +55,60 @@ document.addEventListener('DOMContentLoaded', () => {
         markers.clearLayers();
         placesTableBody.innerHTML = '';
 
+        if (places.length === 0) {
+            placesTableBody.innerHTML = '<tr><td colspan="5">No places found.</td></tr>';
+            return;
+        }
+
         places.forEach(place => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${place.program}</td>
                 <td>${place.name} (${place.ref})</td>
                 <td data-locator="${place.locator || ''}">${place.locator || 'N/A'}</td>
-                <td></td>`;
+                <td></td>
+                <td><button class="view-btn" data-ref="${place.ref}">View</button></td>`;
             placesTableBody.appendChild(row);
 
             const lat = parseFloat(place.lat);
             const lon = parseFloat(place.lon);
+            let latLng;
 
             if (!isNaN(lat) && !isNaN(lon)) {
-                const latLng = [lat, lon];
-                const marker = L.marker(latLng).bindPopup(`<b>${place.program} - ${place.ref}</b><br>${place.name}`);
-                markers.addLayer(marker);
+                latLng = [lat, lon];
             } else if (place.locator) {
                 try {
-                    const latLng = maidenhead.toLatLng(place.locator);
-                    const marker = L.marker(latLng).bindPopup(`<b>${place.program} - ${place.ref}</b><br>${place.name}`);
-                    markers.addLayer(marker);
+                    latLng = maidenhead.toLatLng(place.locator);
                 } catch (e) {
-                    // This locator is invalid, do nothing. The table already shows the locator or N/A.
+                    // Invalid locator, latLng remains undefined
                 }
+            }
+
+            if (latLng) {
+                place.latLng = latLng; // Store for later use
+                const marker = L.marker(latLng, { icon: iconMap[place.program] || L.divIcon() })
+                    .bindPopup(`<b>${place.program} - ${place.ref}</b><br>${place.name}`);
+                markers.addLayer(marker);
             }
         });
 
-        // A small delay to ensure the DOM is updated before calculating headings
-        setTimeout(() => {
-            const userGrid = gridLocatorInput.value;
-            if (userGrid && userGrid.length >= 4) {
-                try {
-                    const userLatLng = maidenhead.toLatLng(userGrid);
-                    updateHeadings(userLatLng);
-                } catch (e) {
-                    updateHeadings(null);
+        // Auto-zoom if there's only one result
+        if (places.length === 1 && places[0].latLng) {
+            map.setView(places[0].latLng, 13);
+        }
+
+        // Add event listeners to new buttons
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const ref = e.target.dataset.ref;
+                const place = allPlaces.find(p => p.ref === ref);
+                if (place && place.latLng) {
+                    map.setView(place.latLng, 13);
                 }
-            } else {
-                updateHeadings(null);
-            }
-        }, 0);
+            });
+        });
+
+        updateHeadings();
     };
 
     const filterPlaces = () => {
@@ -103,30 +122,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (searchTerm) {
-            filtered = filtered.filter(p =>
-                (p.ref && p.ref.toLowerCase().includes(searchTerm)) ||
-                (p.name && p.name.toLowerCase().includes(searchTerm))
-            );
+            const exactMatch = filtered.find(p => p.ref.toLowerCase() === searchTerm);
+            if (exactMatch) {
+                filtered = [exactMatch];
+            } else {
+                filtered = filtered.filter(p =>
+                    (p.ref && p.ref.toLowerCase().includes(searchTerm)) ||
+                    (p.name && p.name.toLowerCase().includes(searchTerm))
+                );
+            }
         }
 
         displayPlaces(filtered);
     };
 
-    const updateHeadings = (userLatLng) => {
+    const updateHeadings = () => {
+        const userGrid = gridLocatorInput.value;
+        let userLatLng = null;
+        if (userGrid && userGrid.length >= 4) {
+            try {
+                userLatLng = maidenhead.toLatLng(userGrid);
+            } catch (e) { /* ignore invalid user grid */ }
+        }
+
         const rows = placesTableBody.querySelectorAll('tr');
         rows.forEach(row => {
-            const locatorCell = row.cells[2];
             const headingCell = row.cells[3];
-            const locator = locatorCell.dataset.locator;
+            const viewButton = row.querySelector('.view-btn');
+            if (!viewButton) return;
 
-            if (userLatLng && locator) {
-                try {
-                    const placeLatLng = maidenhead.toLatLng(locator);
-                    const heading = calculateHeading(userLatLng, placeLatLng);
-                    headingCell.textContent = `${heading.toFixed(0)}°`;
-                } catch (e) {
-                    headingCell.textContent = '';
-                }
+            const ref = viewButton.dataset.ref;
+            const place = allPlaces.find(p => p.ref === ref);
+
+            if (userLatLng && place && place.latLng) {
+                const heading = calculateHeading(userLatLng, place.latLng);
+                headingCell.textContent = `${heading.toFixed(0)}°`;
             } else {
                 headingCell.textContent = '';
             }
@@ -156,19 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     programSelect.addEventListener('change', filterPlaces);
     searchInput.addEventListener('input', filterPlaces);
-    gridLocatorInput.addEventListener('input', () => {
-        const userGrid = gridLocatorInput.value;
-        if (userGrid.length >= 4) {
-            try {
-                const userLatLng = maidenhead.toLatLng(userGrid);
-                updateHeadings(userLatLng);
-            } catch (e) {
-                updateHeadings(null);
-            }
-        } else {
-            updateHeadings(null);
-        }
-    });
+    gridLocatorInput.addEventListener('input', updateHeadings);
 
     fetchData();
 });
