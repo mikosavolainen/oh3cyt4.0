@@ -109,5 +109,6 @@
     "places.table.name": "Name",
     "places.table.grid_locator": "Grid Locator",
     "places.table.heading": "Heading",
+    "places.table.actions": "Actions",
     "places.loading": "Loading..."
 }
