@@ -1,4 +1,0 @@
-reference,status,name,program,dxcc,state,county,continent,iota,iaruLocator,latitude,longitude,IUCNcat,validFrom,validTo,notes,lastMod,changeLog,reviewFlag,specialFlags,website,country,region,dxccEnum,qsoCount,lastAct
-"OHFF-0001","active","Test WWFF 1","WWFF","OH","","","EU","","KP20le","60.1695","24.9354","II","2024-01-01","","","2024-01-01","","","","","Finland","","226",0,""
-"OHFF-0002","active","Test WWFF 2","WWFF","OH","","","EU","","KP21le","61.4980","23.7602","II","2024-01-01","","","2024-01-01","","","","","Finland","","226",0,""
-"OHFF-0003","active","Test WWFF 3","WWFF","OH","","","EU","","KP22le","62.2426","25.7473","II","2024-01-01","","","2024-01-01","","","","","Finland","","226",0,""
