@@ -457,3 +457,18 @@ footer {
 .hidden {
     display: none !important;
 }
+
+/* Maintenance Page Animation */
+.maintenance-animation {
+    margin-bottom: 2rem;
+}
+
+.gear {
+    animation: spin 4s linear infinite;
+    color: #bb86fc;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
