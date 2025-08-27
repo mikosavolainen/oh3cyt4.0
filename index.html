@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OH3CYT - Ham Radio</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XXXXXXXXXX', { 'allow_ad_personalization_signals': true });
+    </script>
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -44,9 +53,6 @@
         <section class="hero">
             <h1 data-lang="welcome_title">Welcome to my website</h1>
             <p data-lang="welcome_message">This is the personal website of OH3CYT, a ham radio operator from Finland.</p>
-            <div id="utc-clock-container">
-                <p id="utc-clock"></p>
-            </div>
         </section>
 
         <section class="solar-data">
@@ -94,6 +100,5 @@
     </footer>
 
     <script src="js/script.js"></script>
-    <script src="js/clock.js"></script>
 </body>
 </html>
