@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Get the latest values
             const sfi = sfiData.length > 0 ? sfiData[0].flux : '--';
-            const kIndex = kIndexData.length > 0 ? kIndexData[0].kp_index : '--';
+            const kIndex = kIndexData.length > 0 ? kIndexData[kIndexData.length - 1].kp_index : '--';
             const aIndex = aIndexData.length > 0 ? aIndexData[0].afred_1_day : '--';
 
             document.getElementById('sfi-value').textContent = sfi;
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Check for solar storm alerts
             const stormAlertElement = document.getElementById('solar-storm-alert');
-            const stormInProgress = kIndexData.length > 0 && parseInt(kIndexData[0].kp_index, 10) >= 5;
+            const stormInProgress = kIndexData.length > 0 && parseInt(kIndexData[kIndexData.length - 1].kp_index, 10) >= 5;
 
             if (stormInProgress) {
                 stormAlertElement.style.display = 'block';
